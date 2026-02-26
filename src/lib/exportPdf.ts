@@ -46,7 +46,7 @@ export function exportPdf(expenses: Expense[], startDate?: string, endDate?: str
     });
 
     // Expense detail table
-    const finalY = (doc as unknown as Record<string, number>).lastAutoTable?.finalY || 140;
+    const finalY = ((doc as unknown as Record<string, Record<string, number>>).lastAutoTable?.finalY) || 140;
     autoTable(doc, {
         startY: finalY + 10,
         head: [['Date', 'Category', 'Amount', 'Note']],

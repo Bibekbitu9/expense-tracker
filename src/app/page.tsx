@@ -7,7 +7,7 @@ import Dashboard from '@/components/Dashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import ToastContainer, { useToast } from '@/components/Toast';
 import { Expense } from '@/lib/types';
-import { fetchExpenses, filterByDateRange, expensesToCsv } from '@/lib/api';
+import { fetchExpenses, filterByDateRange } from '@/lib/api';
 
 export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -55,23 +55,6 @@ export default function Home() {
     setCurrentEnd('');
   };
 
-  const handleDownloadCsv = () => {
-    const csv = expensesToCsv(filtered);
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'expenses.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    addToast('CSV downloaded!', 'success');
-  };
-
-  const handleExportPdf = async () => {
-    const { exportPdf } = await import('@/lib/exportPdf');
-    exportPdf(filtered, currentStart, currentEnd);
-    addToast('PDF exported!', 'success');
-  };
 
   return (
     <main className="app-container">
@@ -81,16 +64,6 @@ export default function Home() {
       <header className="header fade-in">
         <h1>💎 Expense Intelligence</h1>
         <div className="header-actions">
-          {hasData && filtered.length > 0 && (
-            <>
-              <button className="btn-icon" onClick={handleDownloadCsv} title="Download CSV" id="csv-btn">
-                📥
-              </button>
-              <button className="btn-icon" onClick={handleExportPdf} title="Export PDF" id="pdf-btn">
-                📄
-              </button>
-            </>
-          )}
           <ThemeToggle />
         </div>
       </header>

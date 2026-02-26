@@ -275,14 +275,12 @@ body::before {
   padding: 14px 16px;
   border: 1.5px solid var(--border-color);
   border-radius: var(--radius-sm);
-  background: var(--bg-input);
+  background: var(--bg-card-solid);
   color: var(--text-primary);
   font-size: 1rem;
   font-family: var(--font-sans);
-  transition: var(--transition-smooth);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   outline: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   -webkit-appearance: none;
   appearance: none;
 }

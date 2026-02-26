@@ -17,6 +17,7 @@ export const CATEGORIES = [
     'Vegetables',
     'Bigbasket/Jio-Mart',
     'Milk',
+    'Petrol',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
@@ -26,7 +27,7 @@ export const BUDGET_LIMIT = 100000; // ₹1,00,000
 export const CATEGORY_COLORS = [
     '#818cf8', '#a78bfa', '#c084fc', '#e879f9',
     '#f472b6', '#fb7185', '#fb923c', '#34d399',
-    '#38bdf8',
+    '#38bdf8', '#facc15',
 ];
 
 export const MONTH_ORDER = [

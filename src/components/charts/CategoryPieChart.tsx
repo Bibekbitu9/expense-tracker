@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { CATEGORY_COLORS } from '@/lib/types';
 import { formatCurrency } from '@/lib/api';
@@ -45,7 +45,36 @@ function renderCustomLabel({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, oute
     );
 }
 
+function useThemeColors() {
+    const [colors, setColors] = useState({
+        tooltipBg: 'rgba(17, 24, 39, 0.95)',
+        tooltipText: '#f0f4ff',
+        tooltipBorder: 'rgba(99, 102, 241, 0.2)',
+        tooltipShadow: '0 8px 32px rgba(0,0,0,0.4)',
+    });
+
+    useEffect(() => {
+        const update = () => {
+            const s = getComputedStyle(document.documentElement);
+            setColors({
+                tooltipBg: s.getPropertyValue('--tooltip-bg').trim() || 'rgba(17, 24, 39, 0.95)',
+                tooltipText: s.getPropertyValue('--tooltip-text').trim() || '#f0f4ff',
+                tooltipBorder: s.getPropertyValue('--tooltip-border').trim() || 'rgba(99, 102, 241, 0.2)',
+                tooltipShadow: s.getPropertyValue('--tooltip-shadow').trim() || '0 8px 32px rgba(0,0,0,0.4)',
+            });
+        };
+        update();
+        const obs = new MutationObserver(update);
+        obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => obs.disconnect();
+    }, []);
+
+    return colors;
+}
+
 export default function CategoryPieChart({ data, total }: CategoryPieChartProps) {
+    const theme = useThemeColors();
+
     return (
         <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -90,12 +119,12 @@ export default function CategoryPieChart({ data, total }: CategoryPieChartProps)
                         name ?? '',
                     ]}
                     contentStyle={{
-                        background: 'rgba(17, 24, 39, 0.95)',
-                        border: '1px solid rgba(99, 102, 241, 0.2)',
+                        background: theme.tooltipBg,
+                        border: `1px solid ${theme.tooltipBorder}`,
                         borderRadius: '12px',
                         fontSize: '0.85rem',
-                        color: '#f0f4ff',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                        color: theme.tooltipText,
+                        boxShadow: theme.tooltipShadow,
                         backdropFilter: 'blur(20px)',
                     }}
                 />

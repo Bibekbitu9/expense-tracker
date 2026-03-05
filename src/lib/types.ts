@@ -18,6 +18,8 @@ export const CATEGORIES = [
     'Bigbasket/Jio-Mart',
     'Milk',
     'Petrol',
+    'Medicine',
+    'Cab',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];

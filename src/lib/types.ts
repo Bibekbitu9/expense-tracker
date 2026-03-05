@@ -20,6 +20,7 @@ export const CATEGORIES = [
     'Petrol',
     'Medicine',
     'Cab',
+    'Recharge',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];

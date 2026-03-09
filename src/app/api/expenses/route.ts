@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
 
         // Validate required fields
-        if (!body.date || !body.category || !body.amount) {
+        if (!body.date || !body.category || !body.amount || !body.paidBy) {
             return NextResponse.json(
-                { success: false, message: 'Missing required fields: date, category, amount' },
+                { success: false, message: 'Missing required fields: date, category, amount, paidBy' },
                 { status: 400 }
             );
         }

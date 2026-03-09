@@ -2,6 +2,7 @@ export interface Expense {
     date: string;
     category: string;
     amount: number;
+    paidBy: string;
     note: string;
     month: string;
     year: number;
@@ -22,6 +23,8 @@ export const CATEGORIES = [
     'Cab',
     'Recharge',
 ] as const;
+
+export const PAYERS = ['Bibek', 'Shalini'] as const;
 
 export type Category = (typeof CATEGORIES)[number];
 

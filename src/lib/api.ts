@@ -4,6 +4,7 @@ export async function addExpense(expense: {
     date: string;
     category: string;
     amount: number;
+    paidBy: string;
     note: string;
 }): Promise<{ success: boolean; message: string }> {
     try {
@@ -33,6 +34,7 @@ export async function fetchExpenses(): Promise<Expense[]> {
         date: String(row.date || ''),
         category: String(row.category || ''),
         amount: Number(row.amount) || 0,
+        paidBy: String(row['paid by'] || row.paidby || ''),
         note: String(row.note || ''),
         month: String(row.month || ''),
         year: Number(row.year) || 0,
@@ -81,6 +83,17 @@ export function getCategoryBreakdown(expenses: Expense[]) {
     });
     return Object.entries(map)
         .map(([category, amount]) => ({ category, amount }))
+        .sort((a, b) => b.amount - a.amount);
+}
+
+export function getPayerBreakdown(expenses: Expense[]) {
+    const map: Record<string, number> = {};
+    expenses.forEach((exp) => {
+        const payer = exp.paidBy || 'Unknown';
+        map[payer] = (map[payer] || 0) + exp.amount;
+    });
+    return Object.entries(map)
+        .map(([payer, amount]) => ({ payer, amount }))
         .sort((a, b) => b.amount - a.amount);
 }
 
@@ -136,9 +149,9 @@ export function formatCurrency(amount: number): string {
 }
 
 export function expensesToCsv(expenses: Expense[]): string {
-    const header = 'Date,Category,Amount,Note,Month,Year';
+    const header = 'Date,Category,Amount,Paid By,Note,Month,Year';
     const rows = expenses.map(
-        (e) => `"${e.date}","${e.category}",${e.amount},"${e.note}","${e.month}",${e.year}`
+        (e) => `"${e.date}","${e.category}",${e.amount},"${e.paidBy}","${e.note}","${e.month}",${e.year}`
     );
     return [header, ...rows].join('\n');
 }

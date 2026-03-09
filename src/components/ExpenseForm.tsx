@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CATEGORIES } from '@/lib/types';
+import { CATEGORIES, PAYERS } from '@/lib/types';
 import { addExpense } from '@/lib/api';
 
 interface ExpenseFormProps {
@@ -13,13 +13,14 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [category, setCategory] = useState('');
     const [amount, setAmount] = useState('');
+    const [paidBy, setPaidBy] = useState<string>(PAYERS[0]);
     const [note, setNote] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!date || !category || !amount) {
+        if (!date || !category || !amount || !paidBy) {
             onToast('Please fill all required fields', 'error');
             return;
         }
@@ -35,6 +36,7 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
                 date,
                 category,
                 amount: parseFloat(amount),
+                paidBy,
                 note,
             });
 
@@ -101,6 +103,25 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
                             step="1"
                             required
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Paid By *</label>
+                        <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
+                            {PAYERS.map(payer => (
+                                <label key={payer} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: '0.9rem' }}>
+                                    <input
+                                        type="radio"
+                                        name="paidBy"
+                                        value={payer}
+                                        checked={paidBy === payer}
+                                        onChange={(e) => setPaidBy(e.target.value)}
+                                        style={{ accentColor: 'var(--accent-primary)', width: '16px', height: '16px' }}
+                                    />
+                                    {payer}
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="form-group">

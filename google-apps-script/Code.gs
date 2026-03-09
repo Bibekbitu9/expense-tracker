@@ -19,10 +19,10 @@ function getOrCreateSheet() {
   
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['Date', 'Category', 'Amount', 'Note', 'Month', 'Year']);
+    sheet.appendRow(['Date', 'Category', 'Amount', 'Paid By', 'Note', 'Month', 'Year']);
     
     // Format header row
-    const headerRange = sheet.getRange(1, 1, 1, 6);
+    const headerRange = sheet.getRange(1, 1, 1, 7);
     headerRange.setFontWeight('bold');
     headerRange.setBackground('#4F46E5');
     headerRange.setFontColor('#FFFFFF');
@@ -31,9 +31,10 @@ function getOrCreateSheet() {
     sheet.setColumnWidth(1, 120);
     sheet.setColumnWidth(2, 200);
     sheet.setColumnWidth(3, 100);
-    sheet.setColumnWidth(4, 250);
-    sheet.setColumnWidth(5, 80);
+    sheet.setColumnWidth(4, 100);
+    sheet.setColumnWidth(5, 250);
     sheet.setColumnWidth(6, 80);
+    sheet.setColumnWidth(7, 80);
   }
   
   return sheet;
@@ -54,9 +55,9 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     
     // Validate required fields
-    if (!data.date || !data.category || !data.amount) {
+    if (!data.date || !data.category || !data.amount || !data.paidBy) {
       return ContentService
-        .createTextOutput(JSON.stringify({ success: false, message: 'Missing required fields: date, category, amount' }))
+        .createTextOutput(JSON.stringify({ success: false, message: 'Missing required fields: date, category, amount, paidBy' }))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
@@ -81,12 +82,13 @@ function doPost(e) {
       formattedDate,
       data.category,
       parseFloat(data.amount),
+      data.paidBy,
       data.note || '',
       month,
       year
     ]);
     
-    Logger.log('Expense added: ' + formattedDate + ' | ' + data.category + ' | ' + data.amount);
+    Logger.log('Expense added: ' + formattedDate + ' | ' + data.category + ' | ' + data.amount + ' | ' + data.paidBy);
     
     return ContentService
       .createTextOutput(JSON.stringify({ success: true, message: 'Expense added successfully' }))

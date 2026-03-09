@@ -8,6 +8,7 @@ import {
     getAveragePerMonth,
     getPercentChange,
     getCategoryBreakdown,
+    getPayerBreakdown,
     getMonthlyTotals,
     formatCurrency,
 } from '@/lib/api';
@@ -36,6 +37,7 @@ export default function Dashboard({ expenses }: DashboardProps) {
     const avgPerMonth = getAveragePerMonth(expenses);
     const percentChange = getPercentChange(expenses);
     const categoryBreakdown = getCategoryBreakdown(expenses);
+    const payerBreakdown = getPayerBreakdown(expenses);
     const monthlyTotals = getMonthlyTotals(expenses);
 
     // Current month total for budget comparison
@@ -113,6 +115,18 @@ export default function Dashboard({ expenses }: DashboardProps) {
                         </p>
                     )}
                 </div>
+            </div>
+
+            {/* Payer Breakdown */}
+            <div className="grid-2 fade-in fade-in-delay-3" style={{ marginTop: '-4px' }}>
+                {payerBreakdown.map((payer) => (
+                    <div key={payer.payer} className="card stat-card" style={{ padding: '16px' }}>
+                        <div className="card-title" style={{ fontSize: '0.9rem' }}>Paid by {payer.payer}</div>
+                        <div className="card-value" style={{ fontSize: '1.2rem', color: 'var(--accent-primary)' }}>
+                            {formatCurrency(payer.amount)}
+                        </div>
+                    </div>
+                ))}
             </div>
 
             {/* Charts — stacked on mobile, side-by-side on desktop */}

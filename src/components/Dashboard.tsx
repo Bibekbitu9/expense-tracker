@@ -14,7 +14,6 @@ import {
 } from '@/lib/api';
 import CategoryPieChart from './charts/CategoryPieChart';
 import MonthlyBarChart from './charts/MonthlyBarChart';
-import SpendingTrendLine from './charts/SpendingTrendLine';
 
 interface DashboardProps {
     expenses: Expense[];
@@ -143,14 +142,6 @@ export default function Dashboard({ expenses }: DashboardProps) {
                     <div className="chart-container">
                         <MonthlyBarChart data={monthlyTotals} />
                     </div>
-                </div>
-            </div>
-
-            {/* Trend Line */}
-            <div className="card fade-in">
-                <h3 className="section-title">📈 Spending Trend</h3>
-                <div className="chart-container">
-                    <SpendingTrendLine data={monthlyTotals} />
                 </div>
             </div>
 

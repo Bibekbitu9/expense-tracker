@@ -13,7 +13,7 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [category, setCategory] = useState('');
     const [amount, setAmount] = useState('');
-    const [paidBy, setPaidBy] = useState<string>(PAYERS[0]);
+    const [paidBy, setPaidBy] = useState<string>('');
     const [note, setNote] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -45,6 +45,7 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
                 // Reset form
                 setCategory('');
                 setAmount('');
+                setPaidBy('');
                 setNote('');
                 onExpenseAdded();
             } else {
@@ -117,6 +118,7 @@ export default function ExpenseForm({ onExpenseAdded, onToast }: ExpenseFormProp
                                         checked={paidBy === payer}
                                         onChange={(e) => setPaidBy(e.target.value)}
                                         style={{ accentColor: 'var(--accent-primary)', width: '16px', height: '16px' }}
+                                        required
                                     />
                                     {payer}
                                 </label>

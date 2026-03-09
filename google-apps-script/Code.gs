@@ -35,6 +35,21 @@ function getOrCreateSheet() {
     sheet.setColumnWidth(5, 250);
     sheet.setColumnWidth(6, 80);
     sheet.setColumnWidth(7, 80);
+  } else {
+    // Check if Paid By exists. If not, append it to the end of headers.
+    const lastCol = sheet.getLastColumn();
+    if (lastCol > 0) {
+      const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+      const hasPaidBy = headers.some(h => String(h).trim().toLowerCase() === 'paid by');
+      
+      if (!hasPaidBy) {
+        sheet.getRange(1, lastCol + 1).setValue('Paid By')
+             .setFontWeight('bold')
+             .setBackground('#4F46E5')
+             .setFontColor('#FFFFFF');
+        sheet.setColumnWidth(lastCol + 1, 100);
+      }
+    }
   }
   
   return sheet;
@@ -78,15 +93,24 @@ function doPost(e) {
     // Format date as DD/MM/YYYY
     const formattedDate = Utilities.formatDate(date, Session.getScriptTimeZone(), 'dd/MM/yyyy');
     
-    sheet.appendRow([
-      formattedDate,
-      data.category,
-      parseFloat(data.amount),
-      data.paidBy,
-      data.note || '',
-      month,
-      year
-    ]);
+    // Construct row based on dynamic headers
+    const lastCol = sheet.getLastColumn();
+    const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    
+    const rowData = new Array(lastCol).fill('');
+    
+    headers.forEach((header, index) => {
+      const h = String(header).trim().toLowerCase();
+      if (h === 'date') rowData[index] = formattedDate;
+      else if (h === 'category') rowData[index] = data.category;
+      else if (h === 'amount') rowData[index] = parseFloat(data.amount);
+      else if (h === 'paid by') rowData[index] = data.paidBy;
+      else if (h === 'note') rowData[index] = data.note || '';
+      else if (h === 'month') rowData[index] = month;
+      else if (h === 'year') rowData[index] = year;
+    });
+    
+    sheet.appendRow(rowData);
     
     Logger.log('Expense added: ' + formattedDate + ' | ' + data.category + ' | ' + data.amount + ' | ' + data.paidBy);
     
